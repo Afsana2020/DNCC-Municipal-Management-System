@@ -1,86 +1,37 @@
 # DNCC Municipal Management System
-The DNCC Municipal Management System is a comprehensive digital platform designed to streamline project planning, asset management, maintenance operations, employee coordination, and citizen engagement within the Dhaka North City Corporation. The system centralizes major administrative activities, such as project creation, resource allocation, task monitoring, and citizen report handling, into a single efficient interface. To ensure the system reflects DNCC’s real operational workflow, information was gathered through an informal interview with an Executive Engineer of the Planning and Design Department of DNCC. This project was developed based on the insights he provided, and the resulting workflow diagram is included below.
+The DNCC Municipal Management System is a comprehensive digital platform designed to streamline project planning, asset management, maintenance operations, employee coordination, and citizen engagement within the Dhaka North City Corporation. The system supports two types of users: Citizens, who can submit reports, track the status of their complaints, and stay informed about municipal actions—enhancing transparency and public trust, and Admin Users, DNCC officials responsible for managing projects, assets, employees, maintenance tasks, and citizen interactions through a structured and efficient interface. To ensure the platform accurately reflects DNCC’s actual operational workflow, information was gathered through an informal interview with an Executive Engineer from the Planning and Design Department of DNCC. This project was developed based on the insights he provided, and the resulting workflow diagram is included below.
 
 <img width="1130" height="1055" alt="dncc" src="https://github.com/user-attachments/assets/1307048d-b4a2-4a4a-a29d-62dea2276ba0" />
 
-Fig-1: DNCC workflow diagram
+
+## Features
+- Login and Registration: Secure login and account creation for both citizens and admin users, ensuring controlled access to system functionalities.
+
+Sign-in:
+
+![olog](https://github.com/user-attachments/assets/02c22851-7051-467c-879b-803bd55a938b)
+
+Sign-up:
+
+![register](https://github.com/user-attachments/assets/61e595cc-f5d9-4c2f-bba9-3436a6fdcc81)
+
+- Dashboard: For admin, a centralized overview displaying key statistics such as active, completed, and upcoming projects, total tasks, recent citizen reports, and overall municipal activity. For citizens, a centralized overview displaying report stats and profiles.
+
+![dashboard](https://github.com/user-attachments/assets/94c2071a-4c53-4831-99b4-48b13f4652f3)
 
 
-## Features:
-- Dashboard: The Dashboard provides a summary view of all ongoing, completed, and upcoming projects with key statistics and quick insights.
+
+
+- Project Management: Allows admin to create and oversee development projects by assigning zones, packages, segments, teams, and tasks. Includes tracking of budgets, timelines, and progress for full project transparency.
+
+- Assets Management: A structured module for creating, storing, and managing all municipal assets used across projects and maintenance activities, helping track usage and resource allocation.
+
+- Maintenance Management: Displays all maintenance tasks with details such as type, asset used, assigned project, start & end dates, cost, and status. Admin can update progress, assign workers, and ensure timely completion.
+
+- Employee Management: Provides detailed employee profiles, including designation, salary, current roles, and work history. Admin can assign or remove employees from tasks, segments, or projects.
+
+- Citizen Reports: Citizens can submit reports directly through the system. Admin can review these reports, provide feedback, and convert them into maintenance tasks when needed, improving responsiveness and public engagement.
+
+- Users Management: Admin can view citizen accounts, check report history, and manage user-related information to maintain a transparent and secure environment.
   
-- Projects: The Projects page allows admin to create, manage, and monitor different types of projects, including assigning teams, zones, packages, and tasks.
-  
-- Assets: The Assets page is used to create, store, and manage all assets utilized across various projects and maintenance tasks.
-  
-- Maintenance: The Maintenance page displays all tasks with details such as task type, asset, project, duration, status, and cost, and allows admin to manage and update these tasks.
 
-- Employees: The Employees page shows detailed information about each employee, including their designation, salary, active assignments, and provides options to view, assign, or remove them.
-  
-- Citizen Reports: The Citizen Reports page allows admin to review submitted reports, provide feedback, and convert them into maintenance tasks when necessary.
-  
-- Users: The Users page manages system users by allowing admin to view citizen profiles and reports history.
-  
-## System Usage Guide:
-1.	Login DNCC Portal: 
-
-
- 
-2.	After logging into the portal, it redirects to admin panel dashboard where it shows an overview of the projects.
-
- 
-3.	From Projects page create a ‘New Project’ and fill in the required details, including the start and end dates, budget, description, and project status such as Active, Paused, Completed, or Cancelled.
- 
-
- 
-4.	Assign a Project Director from “Add Employee.” Select either a new or an existing employee to assign as the Project Director. Additional team members can also be added by “Add Employee” again.
-
- 
-
- 
-
-5.	Add zones and create packages from “Add Zone” and “Create Packages” respectively. 
-
- 
-6.	While creating a package, admin needs to provide details such as the package name, budget, and start and end dates.
-
- 
-
-7.	In that package, create a new segment from “Add Segment” and assign team members, including a Team Leader from “Add Member.”
-
- 
-
-8.	Add zones that are related to project areas.
-
- 
-
-9.	In ‘Add Segment’, assign new tasks by giving task details, cost, start & end dates, description & asset by selecting or creating new asset.
-
- 
- 
-
- 
-10.	After creating the segment, update task status, assign workers, allocate resources, view asset information, and review a detailed budget breakdown.
-
- 
-
-11.	Resources can be added by selecting the resource type and entering the unit cost and quantity, after which the system will automatically calculate the total cost.
-
- 
-12.	In the Assets page, assets used in different projects can also be created and managed.
- 
-13.	In the Maintenance page, all tasks can also be manged from “View.”
-
- 
-14.	From “Employees” page any employee can be manged for any type of works.
- 
-15.	View any employee profile details like salary, contact number, current & past work assignments.
- 
-16.	To assign any employee from “Assign”, choose level, select work and set role.
- 
- 
- 
-17.	In the Citizen Reports section, admin can view submitted reports, provide feedback, and assign those reports as maintenance tasks when necessary.
- 
- 
- 
