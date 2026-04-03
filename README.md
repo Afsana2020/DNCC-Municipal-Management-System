@@ -292,11 +292,10 @@ CREATE TABLE `report_images` (
 ```
 
 ## Tool Used:
-- HTML
-- CSS
-- JavaScript
-- Bootstrap
-- MySQL
+- Frontend: HTML, CSS, JavaScript & Bootstrap
+- Backend: PHP
+- Database: MySQL
+
 
 ## Contact:
 - Email: afsanahena24@gmail.com
