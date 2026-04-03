@@ -84,8 +84,6 @@ Admin:
 
 Citizen:
 
-![cc1](https://github.com/user-attachments/assets/1d72e6e7-75fc-4146-b213-87eeeea7fb89)
-
 ![cc2](https://github.com/user-attachments/assets/c80db6bb-a355-4186-96c8-10f67cef9425)
 
 ![cc3](https://github.com/user-attachments/assets/53f44315-ece7-4b73-9cbb-1da2493838c8)
@@ -97,4 +95,14 @@ Citizen:
 
 ![u1](https://github.com/user-attachments/assets/b1b7035e-49f7-4f32-9782-d8376ac7dc4e)
 
+## Tool Used:
+- HTML
+- CSS
+- JavaScript
+- Bootstrap
+- MySQL
 
+## Contact:
+- Email: afsanahena24@gmail.com
+
+- LinkedIn: https://www.linkedin.com/in/afsana-hena/
