@@ -95,6 +95,202 @@ Citizen:
 
 ![u1](https://github.com/user-attachments/assets/b1b7035e-49f7-4f32-9782-d8376ac7dc4e)
 
+## Database Table:
+
+```
+CREATE TABLE `users` (
+  `id` int unsigned NOT NULL AUTO_INCREMENT,
+  `firstName` varchar(50) NOT NULL,
+  `lastName` varchar(50) NOT NULL,
+  `email` varchar(100) NOT NULL,
+  `password` varchar(255) NOT NULL,
+  `role` enum('admin','citizen') DEFAULT 'citizen',
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `email` (`email`)
+);
+
+CREATE TABLE `assets` (
+  `Asset_ID` int unsigned NOT NULL AUTO_INCREMENT,
+  `Asset_Type` varchar(50) NOT NULL,
+  `Asset_Name` varchar(255) NOT NULL,
+  `Asset_Condition` enum('Good','Fair','Poor','New Construction','Needs Maintenance','Under Maintenance') NOT NULL,
+  `Expenses` decimal(15,2) unsigned NOT NULL,
+  `Location` text NOT NULL,
+  `Installation_Date` date NOT NULL,
+  `Maintenance_Interval` int unsigned NOT NULL,
+  `Checking_Date` date DEFAULT NULL,
+  `Last_Maintenance_Date` date DEFAULT NULL,
+  `Created_At` timestamp NOT NULL DEFAULT current_timestamp(),
+  PRIMARY KEY (`Asset_ID`)
+);
+
+CREATE TABLE `projects` (
+  `Project_ID` int unsigned NOT NULL AUTO_INCREMENT,
+  `Project_Name` varchar(255) NOT NULL,
+  `Description` text DEFAULT NULL,
+  `Budget` decimal(15,2) unsigned DEFAULT 0.00,
+  `Project_Type` enum('Large','Routine','Urgent') NOT NULL,
+  `Project_Director` varchar(100) DEFAULT NULL,
+  `Start_Date` date DEFAULT NULL,
+  `End_Date` date DEFAULT NULL,
+  `Status` enum('Not Started','Active','Paused','Completed','Cancelled') NOT NULL DEFAULT 'Not Started',
+  `Created_At` timestamp NOT NULL DEFAULT current_timestamp(),
+  PRIMARY KEY (`Project_ID`)
+);
+
+CREATE TABLE `packages` (
+  `Package_ID` int unsigned NOT NULL AUTO_INCREMENT,
+  `Project_ID` int unsigned NOT NULL,
+  `Package_Name` varchar(255) NOT NULL,
+  `Description` text DEFAULT NULL,
+  `Package_Type` enum('DPP','Maintenance') NOT NULL,
+  `Team_Leader` varchar(100) DEFAULT NULL,
+  `Budget` decimal(15,2) unsigned DEFAULT NULL,
+  `Start_Date` date DEFAULT NULL,
+  `End_Date` date DEFAULT NULL,
+  `Status` enum('Not Started','Active','Paused','Completed','Cancelled') NOT NULL DEFAULT 'Not Started',
+  `Created_At` timestamp NOT NULL DEFAULT current_timestamp(),
+  PRIMARY KEY (`Package_ID`),
+  FOREIGN KEY (`Project_ID`) REFERENCES `projects` (`Project_ID`) ON DELETE CASCADE
+);
+
+CREATE TABLE `zones` (
+  `Zone_ID` int unsigned NOT NULL AUTO_INCREMENT,
+  `Zone_Name` mediumtext DEFAULT NULL,
+  `Zone_Code` varchar(20) NOT NULL,
+  `Created_At` timestamp NOT NULL DEFAULT current_timestamp(),
+  PRIMARY KEY (`Zone_ID`)
+);
+
+CREATE TABLE `project_zones` (
+  `Project_Zone_ID` int unsigned NOT NULL AUTO_INCREMENT,
+  `Project_ID` int unsigned NOT NULL,
+  `Zone_ID` int unsigned NOT NULL,
+  PRIMARY KEY (`Project_Zone_ID`),
+  FOREIGN KEY (`Project_ID`) REFERENCES `projects` (`Project_ID`) ON DELETE CASCADE,
+  FOREIGN KEY (`Zone_ID`) REFERENCES `zones` (`Zone_ID`) ON DELETE CASCADE
+);
+
+CREATE TABLE `citizen_reports` (
+  `Report_ID` int unsigned NOT NULL AUTO_INCREMENT,
+  `Report_type` varchar(100) DEFAULT NULL,
+  `Report_Date` date DEFAULT NULL,
+  `Description` text DEFAULT NULL,
+  `Report_Image` longblob DEFAULT NULL,
+  `user_id` int unsigned DEFAULT NULL,
+  `Status` enum('Submitted','Under Review','In Progress','Resolved','Closed') DEFAULT 'Submitted',
+  `Admin_Response` text DEFAULT NULL,
+  `Response_Date` date DEFAULT NULL,
+  `Asset_ID` int unsigned DEFAULT NULL,
+  `Project_ID` int unsigned DEFAULT NULL,
+  PRIMARY KEY (`Report_ID`),
+  FOREIGN KEY (`user_id`) REFERENCES `users` (`id`),
+  FOREIGN KEY (`Asset_ID`) REFERENCES `assets` (`Asset_ID`) ON DELETE SET NULL,
+  FOREIGN KEY (`Project_ID`) REFERENCES `projects` (`Project_ID`) ON DELETE SET NULL
+);
+
+CREATE TABLE `citizens` (
+  `Citizen_ID` int unsigned NOT NULL AUTO_INCREMENT,
+  `Citizen_name` varchar(100) DEFAULT NULL,
+  `Address` text DEFAULT NULL,
+  `Contact` varchar(20) DEFAULT NULL,
+  `Report_ID` int unsigned DEFAULT NULL,
+  `user_id` int unsigned DEFAULT NULL,
+  PRIMARY KEY (`Citizen_ID`),
+  FOREIGN KEY (`Report_ID`) REFERENCES `citizen_reports` (`Report_ID`) ON DELETE SET NULL,
+  FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE
+);
+
+CREATE TABLE `maintenance` (
+  `Maintenance_ID` int unsigned NOT NULL AUTO_INCREMENT,
+  `task_name` varchar(255) NOT NULL,
+  `Task_type` enum('Construction','Repair','Maintenance','Restoration') NOT NULL,
+  `Asset_ID` int unsigned NOT NULL,
+  `Cost` decimal(15,2) unsigned NOT NULL,
+  `Start_Date` date NOT NULL,
+  `End_Date` date DEFAULT NULL,
+  `Description` text DEFAULT NULL,
+  `Status` enum('Not Started','Active','Paused','Completed','Cancelled') NOT NULL DEFAULT 'Not Started',
+  `Created_At` timestamp NOT NULL DEFAULT current_timestamp(),
+  `Report_ID` int unsigned DEFAULT NULL,
+  `Project_ID` int unsigned DEFAULT NULL,
+  `Package_ID` int unsigned DEFAULT NULL,
+  `Zone_ID` int unsigned DEFAULT NULL,
+  PRIMARY KEY (`Maintenance_ID`),
+  FOREIGN KEY (`Asset_ID`) REFERENCES `assets` (`Asset_ID`) ON DELETE CASCADE,
+  FOREIGN KEY (`Report_ID`) REFERENCES `citizen_reports` (`Report_ID`) ON DELETE SET NULL,
+  FOREIGN KEY (`Project_ID`) REFERENCES `projects` (`Project_ID`) ON DELETE SET NULL,
+  FOREIGN KEY (`Package_ID`) REFERENCES `packages` (`Package_ID`) ON DELETE SET NULL,
+  FOREIGN KEY (`Zone_ID`) REFERENCES `zones` (`Zone_ID`) ON DELETE SET NULL
+);
+
+CREATE TABLE `budgets` (
+  `Budget_ID` int unsigned NOT NULL AUTO_INCREMENT,
+  `Amount_Allocation` decimal(15,2) unsigned DEFAULT NULL,
+  `Amount_Spent` decimal(15,2) unsigned DEFAULT NULL,
+  `Asset_ID` int unsigned DEFAULT NULL,
+  `Project_ID` int unsigned DEFAULT NULL,
+  `Package_ID` int unsigned DEFAULT NULL,
+  PRIMARY KEY (`Budget_ID`),
+  FOREIGN KEY (`Asset_ID`) REFERENCES `assets` (`Asset_ID`) ON DELETE SET NULL,
+  FOREIGN KEY (`Project_ID`) REFERENCES `projects` (`Project_ID`) ON DELETE SET NULL,
+  FOREIGN KEY (`Package_ID`) REFERENCES `packages` (`Package_ID`) ON DELETE SET NULL
+);
+
+CREATE TABLE `workers` (
+  `Worker_ID` int unsigned NOT NULL AUTO_INCREMENT,
+  `Worker_Name` varchar(100) NOT NULL,
+  `Worker_Salary` decimal(15,2) unsigned NOT NULL,
+  `Contact` varchar(20) DEFAULT NULL,
+  `Designation` varchar(100) DEFAULT NULL,
+  PRIMARY KEY (`Worker_ID`)
+);
+
+CREATE TABLE `worker_assignments` (
+  `Assignment_ID` int unsigned NOT NULL AUTO_INCREMENT,
+  `Worker_ID` int unsigned NOT NULL,
+  `Assignment_Type` enum('project','package','maintenance') NOT NULL,
+  `Project_ID` int unsigned DEFAULT NULL,
+  `Package_ID` int unsigned DEFAULT NULL,
+  `Maintenance_ID` int unsigned DEFAULT NULL,
+  `Assigned_Date` datetime DEFAULT current_timestamp(),
+  `Assigned_By` varchar(100) DEFAULT NULL,
+  `Role` varchar(50) DEFAULT NULL,
+  `Designation` varchar(100) DEFAULT NULL,
+  `Status` enum('Active','Paused','Completed','Fired') NOT NULL DEFAULT 'Active',
+  `Notes` text DEFAULT NULL,
+  PRIMARY KEY (`Assignment_ID`),
+  FOREIGN KEY (`Worker_ID`) REFERENCES `workers` (`Worker_ID`) ON DELETE CASCADE,
+  FOREIGN KEY (`Project_ID`) REFERENCES `projects` (`Project_ID`) ON DELETE SET NULL,
+  FOREIGN KEY (`Package_ID`) REFERENCES `packages` (`Package_ID`) ON DELETE SET NULL,
+  FOREIGN KEY (`Maintenance_ID`) REFERENCES `maintenance` (`Maintenance_ID`) ON DELETE SET NULL
+);
+
+CREATE TABLE `resources` (
+  `Resource_ID` int unsigned NOT NULL AUTO_INCREMENT,
+  `Resource_Type` varchar(100) DEFAULT NULL,
+  `Quantity` int unsigned NOT NULL,
+  `Unit_Cost` decimal(10,2) unsigned DEFAULT NULL,
+  `Maintenance_ID` int unsigned DEFAULT NULL,
+  PRIMARY KEY (`Resource_ID`),
+  FOREIGN KEY (`Maintenance_ID`) REFERENCES `maintenance` (`Maintenance_ID`) ON DELETE SET NULL
+);
+
+CREATE TABLE `report_images` (
+  `Image_ID` int unsigned NOT NULL AUTO_INCREMENT,
+  `Report_ID` int unsigned DEFAULT NULL,
+  `Maintenance_ID` int unsigned DEFAULT NULL,
+  `Image_Path` varchar(500) NOT NULL,
+  `Uploaded_By` int unsigned DEFAULT NULL,
+  `Upload_Date` timestamp NOT NULL DEFAULT current_timestamp(),
+  PRIMARY KEY (`Image_ID`),
+  FOREIGN KEY (`Report_ID`) REFERENCES `citizen_reports` (`Report_ID`) ON DELETE CASCADE,
+  FOREIGN KEY (`Maintenance_ID`) REFERENCES `maintenance` (`Maintenance_ID`) ON DELETE CASCADE,
+  FOREIGN KEY (`Uploaded_By`) REFERENCES `users` (`id`) ON DELETE SET NULL
+);
+```
+
 ## Tool Used:
 - HTML
 - CSS
