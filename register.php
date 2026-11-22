@@ -6,17 +6,21 @@ if(isset($_POST['signUp'])){
     $lastName=$_POST['lName'];
     $email=$_POST['email'];
     $password=$_POST['password'];
-    $password=$password;
+    $password=password_hash($password, PASSWORD_DEFAULT);   // hash password
 
-     $checkEmail="SELECT * From users where email='$email'";
-     $result=$conn->query($checkEmail);
+     // SQL injection fixed: prepared statement
+     $checkEmail = $conn->prepare("SELECT * FROM users WHERE email = ?");
+     $checkEmail->bind_param("s", $email);
+     $checkEmail->execute();
+     $result = $checkEmail->get_result();
      if($result->num_rows>0){
         echo "Email Address Already Exists !";
      }
      else{
-        $insertQuery="INSERT INTO users(firstName,lastName,email,password,role)
-                       VALUES ('$firstName','$lastName','$email','$password','citizen')";
-            if($conn->query($insertQuery)==TRUE){
+        // SQL injection fixed: prepared statement
+        $insertQuery = $conn->prepare("INSERT INTO users(firstName,lastName,email,password,role) VALUES (?,?,?,?,'citizen')");
+        $insertQuery->bind_param("ssss", $firstName, $lastName, $email, $password);
+            if($insertQuery->execute()==TRUE){
                 header("location: index.php");
             }
             else{
@@ -28,13 +32,32 @@ if(isset($_POST['signUp'])){
 if(isset($_POST['signIn'])){
    $email=$_POST['email'];
    $password=$_POST['password'];
-   $password=$password ;
-   
-   $sql="SELECT * FROM users WHERE email='$email' and password='$password'";
-   $result=$conn->query($sql);
+
+   // SQL injection fixed: prepared statement (fetch by email only)
+   $stmt = $conn->prepare("SELECT * FROM users WHERE email = ?");
+   $stmt->bind_param("s", $email);
+   $stmt->execute();
+   $result = $stmt->get_result();
+   $login_ok = false;
+
    if($result->num_rows>0){
+       $row=$result->fetch_assoc();
+       $stored=$row['password'];
+
+       if(password_verify($password, $stored)){
+           $login_ok = true;
+       }
+       elseif(md5($password) === $stored){          // legacy MD5 account
+           $login_ok = true;
+           $newHash = password_hash($password, PASSWORD_DEFAULT);
+           $up = $conn->prepare("UPDATE users SET password = ? WHERE id = ?");
+           $up->bind_param("si", $newHash, $row['id']);
+           $up->execute();
+       }
+   }
+
+   if($login_ok){
     session_start();
-    $row=$result->fetch_assoc();
     $_SESSION['email']=$row['email'];
     $_SESSION['role']=$row['role'];
     $_SESSION['id']=$row['id'];
